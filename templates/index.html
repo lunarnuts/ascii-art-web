@@ -1,0 +1,117 @@
+<head>
+  <style>
+    body {
+      background-image: url("https://i.pinimg.com/originals/8b/94/2f/8b942fa691759d436ffd3fd5357c11c7.gif");
+    }
+    h1 {
+      color: blue;
+      text-align: center;
+      font-size: 5vw;
+      font-weight: 400;
+      position: relative;
+      top: 33%;
+    }
+    .form {
+      background-color: cornsilk;
+      position: relative;
+      text-align: center;
+      height: 20%;
+      width: 40%;
+      top: 10%;
+      left: 30%;
+    }
+    pre {
+      background-color: black;
+      color: white;
+      text-align: justify center;
+      width: 100%;
+      height: 50%;
+      overflow: auto;
+    }
+    button {
+      background-color: blanchedalmond;
+      width: 30%;
+      height: 20%;
+      position: relative;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      text-size-adjust: auto;
+    }
+    textarea {
+      height: 50%;
+      width: 90%;
+    }
+    select {
+      width: 90%;
+      height: 10%;
+      background-color: white;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+    .header {
+      align-items: center;
+      background-color: cornsilk;
+      position: relative;
+      text-align: center;
+      height: 20%;
+      width: 40%;
+      left: 30%;
+      box-shadow: 0px 0px 0px 3px blue inset;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Ascii-Art-Web</h1>
+  </div>
+  <div>
+    <div class="form">
+      <div>
+        <select class="Font" ; name="Font" ; id="Font">
+          <option value="standard">standard</option>
+          <option value="thinkertoy">thinkertoy</option>
+          <option value="shadow">shadow</option>
+        </select>
+      </div>
+      <div><textarea name="Text" , id="Text"></textarea></div>
+      <div>
+        <button onclick="sendRequest()">Result</button>
+        <script>
+          function sendRequest() {
+            var data = JSON.stringify({
+              banner: document.getElementById("Font").value,
+              text: document.getElementById("Text").value,
+            });
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 200) {
+                var response = JSON.parse(this.responseText);
+
+                document.getElementById("Output").innerHTML =
+                  response["result"];
+              }
+              if (this.readyState == 4 && this.status == 400) {
+                window.location.href = "/error400";
+              }
+              if (this.readyState == 4 && this.status == 422) {
+                window.location.href = "/error422";
+              }
+              if (this.readyState == 4 && this.status == 404) {
+                window.location.href = "/error404";
+              }
+              if (this.readyState == 4 && this.status == 500) {
+                window.location.href = "/error500";
+              }
+            };
+            xhttp.open("POST", "", true);
+            xhttp.send(data);
+          }
+        </script>
+        <button onclick="window.location.replace('/export')">Export</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <pre name="Output" ; id="Output">{{.Output}}</pre>
+  </div>
+</body>
